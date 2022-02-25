@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import twitterLogo from './assets/twitter-logo.svg';
 import './styles/App.css';
 
-import myEpicNft from './artifacts/contracts/MyEpicNFT.sol/MyEpicNFT.json';
+import myEpicNft from './utils/MyEpicNFT.json';
 
 // Constants
 const TWITTER_HANDLE = '_buildspace';

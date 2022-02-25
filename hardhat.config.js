@@ -25,7 +25,4 @@ module.exports = {
       accounts: [process.env.REACT_APP_PRIVATE_KEY],
     },
   },
-  paths: {
-    artifacts: './src/artifacts',
-  },
 };
