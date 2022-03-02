@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
+import toast, { Toaster } from 'react-hot-toast';
 import twitterLogo from './assets/twitter-logo.svg';
 import './styles/App.css';
 
@@ -47,7 +48,7 @@ const App = () => {
       const { ethereum } = window;
 
       if (!ethereum) {
-        alert('Get MetaMask!');
+        toast.error('Get MetaMask!');
         return;
       }
 
@@ -105,9 +106,20 @@ const App = () => {
         connectedContract.on('NewEpicNFTMinted', (from, tokenId) => {
           console.log(from, tokenId.toNumber());
           getTotalNFTsMinted();
-          alert(
-            `Hey there! We've minted your NFT and sent it to your wallet. It may be blank right now. It can take a max of 10 min to show up on OpenSea. Here's the link: https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`
-          );
+          toast((t) => (
+            <div>
+              <p>Hey there! We've minted your NFT and sent it to your wallet.</p>
+              <p> It may be blank right now. It can take a max of 10 min to show up on OpenSea.</p>
+              <button
+                className="cta-button connect-wallet-button"
+                onClick={() =>
+                  window.open(`https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`, '_blank').focus()
+                }
+              >
+                Show me my NFT!
+              </button>
+            </div>
+          ));
         });
 
         console.log('Setup event listener!');
@@ -153,25 +165,29 @@ const App = () => {
     </button>
   );
 
-  const renderMintUI = () =>
-    mintCount === maxMint ? (
-      <p className="gradient-text">Sorry, all NFTs have been minted!</p>
-    ) : (
-      <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
-        Mint NFT
-      </button>
-    );
+  const renderMintUI = () => (
+    <>
+      {mintCount === maxMint ? (
+        <p className="gradient-text">Sorry, all NFTs have been minted!</p>
+      ) : (
+        <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
+          Mint NFT
+        </button>
+      )}
+      <p className="sub-text">
+        {mintCount} of {maxMint} available NFTs minted
+      </p>
+    </>
+  );
 
   return (
     <div className="App">
+      <Toaster position="bottom-right" toastOptions={{ duration: 30000, style: { margin: '0 16px 16px 0' } }} />
       <div className="container">
         <div className="header-container">
           <p className="header gradient-text">My NFT Collection</p>
           <p className="sub-text">Each unique. Each beautiful. Discover your NFT today.</p>
           {currentAccount === '' ? renderNotConnectedContainer() : renderMintUI()}
-          <p class="sub-text">
-            {mintCount} of {maxMint} available NFTs minted
-          </p>
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
