@@ -14,6 +14,8 @@ const TOTAL_MINT_COUNT = 50;
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState('');
+  const [maxMint, setMaxMint] = useState(0);
+  const [mintCount, setMintCount] = useState(0);
 
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window;
@@ -63,6 +65,25 @@ const App = () => {
     }
   };
 
+  const getTotalNFTsMinted = async () => {
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myEpicNft.abi, signer);
+
+        const count = await connectedContract.getTotalNFTsMintedSoFar();
+        setMintCount(count.toNumber());
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // Setup our listener.
   const setupEventListener = async () => {
     // Most of this looks the same as our function askContractToMintNft
@@ -75,9 +96,15 @@ const App = () => {
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myEpicNft.abi, signer);
 
+        // Get max supply and mint count.
+        const supply = await connectedContract.MAX_MINT();
+        setMaxMint(supply.toNumber());
+        getTotalNFTsMinted();
+
         // This will essentially "capture" our event when our contract throws it (similar to webhooks).
         connectedContract.on('NewEpicNFTMinted', (from, tokenId) => {
           console.log(from, tokenId.toNumber());
+          getTotalNFTsMinted();
           alert(
             `Hey there! We've minted your NFT and sent it to your wallet. It may be blank right now. It can take a max of 10 min to show up on OpenSea. Here's the link: https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`
           );
@@ -139,6 +166,9 @@ const App = () => {
           <p className="header gradient-text">My NFT Collection</p>
           <p className="sub-text">Each unique. Each beautiful. Discover your NFT today.</p>
           {currentAccount === '' ? renderNotConnectedContainer() : renderMintUI()}
+          <p class="sub-text">
+            {mintCount} of {maxMint} NFTs minted so far
+          </p>
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
