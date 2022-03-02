@@ -153,11 +153,14 @@ const App = () => {
     </button>
   );
 
-  const renderMintUI = () => (
-    <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
-      Mint NFT
-    </button>
-  );
+  const renderMintUI = () =>
+    mintCount === maxMint ? (
+      <p className="gradient-text">Sorry, all NFTs have been minted!</p>
+    ) : (
+      <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
+        Mint NFT
+      </button>
+    );
 
   return (
     <div className="App">
@@ -167,7 +170,7 @@ const App = () => {
           <p className="sub-text">Each unique. Each beautiful. Discover your NFT today.</p>
           {currentAccount === '' ? renderNotConnectedContainer() : renderMintUI()}
           <p class="sub-text">
-            {mintCount} of {maxMint} NFTs minted so far
+            {mintCount} of {maxMint} available NFTs minted
           </p>
         </div>
         <div className="footer-container">
