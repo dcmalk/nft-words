@@ -8,10 +8,9 @@ import myEpicNft from './utils/MyEpicNFT.json';
 
 // Constants
 const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDR;
-const TWITTER_HANDLE = '_buildspace';
+const TWITTER_HANDLE = 'dcmalk';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 const OPENSEA_LINK = '';
-const TOTAL_MINT_COUNT = 50;
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState('');
@@ -191,7 +190,7 @@ const App = () => {
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
-          <a className="footer-text" href={TWITTER_LINK} target="_blank" rel="noreferrer">{`built on @${TWITTER_HANDLE}`}</a>
+          <a className="footer-text" href={TWITTER_LINK} target="_blank" rel="noreferrer">{`more like this @${TWITTER_HANDLE}`}</a>
         </div>
       </div>
     </div>
