@@ -21,7 +21,11 @@ module.exports = {
   solidity: '0.8.4',
   networks: {
     rinkeby: {
-      url: process.env.REACT_APP_ALCHEMY_KEY,
+      url: process.env.REACT_APP_ALCHEMY_RINKEBY_KEY,
+      accounts: [process.env.REACT_APP_PRIVATE_KEY],
+    },
+    ropsten: {
+      url: process.env.REACT_APP_ALCHEMY_ROPSTEN_KEY,
       accounts: [process.env.REACT_APP_PRIVATE_KEY],
     },
   },

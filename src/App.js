@@ -16,6 +16,7 @@ const App = () => {
   const [currentAccount, setCurrentAccount] = useState('');
   const [maxMint, setMaxMint] = useState(0);
   const [mintCount, setMintCount] = useState(0);
+  const [chainSupported, setChainSupported] = useState(false);
 
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window;
@@ -33,6 +34,7 @@ const App = () => {
       const account = accounts[0];
       console.log('Found an authorized account:', account);
       setCurrentAccount(account);
+      checkIfChainIsSupported();
 
       // Setup listener! This is for the case where a user comes to our site
       // and ALREADY had their wallet connected + authorized.
@@ -42,12 +44,31 @@ const App = () => {
     }
   };
 
+  const checkIfChainIsSupported = async () => {
+    try {
+      const { ethereum } = window;
+
+      const chainId = await ethereum.request({ method: 'eth_chainId' });
+      console.log('Connected to chain ' + chainId);
+
+      // ChainId 4 = Rinkeby, 3 = Ropsten
+      if (chainId !== '0x3') {
+        setChainSupported(false);
+        toast.error('Please connect to the Ropsten Test Network');
+      } else {
+        setChainSupported(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const connectWallet = async () => {
     try {
       const { ethereum } = window;
 
       if (!ethereum) {
-        toast.error('Get MetaMask!');
+        toast.error('This app requires MetaMask');
         return;
       }
 
@@ -56,6 +77,7 @@ const App = () => {
 
       console.log('Connected', accounts[0]);
       setCurrentAccount(accounts[0]);
+      checkIfChainIsSupported();
 
       // Setup listener! This is for the case where a user comes to our site
       // and connected their wallet for the first time.
@@ -112,7 +134,8 @@ const App = () => {
               <button
                 className="cta-button connect-wallet-button"
                 onClick={() =>
-                  window.open(`https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`, '_blank').focus()
+                  //window.open(`https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`, '_blank').focus()
+                  window.open(`https://ropsten.rarible.com/token/${CONTRACT_ADDRESS}:${tokenId.toNumber()}`, '_blank').focus()
                 }
               >
                 Show me my NFT!
@@ -145,7 +168,7 @@ const App = () => {
         console.log('Mining...please wait.');
         await nftTxn.wait();
         console.log(nftTxn);
-        console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
+        console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${nftTxn.hash}`);
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -181,12 +204,12 @@ const App = () => {
 
   return (
     <div className="App">
-      <Toaster position="bottom-right" toastOptions={{ duration: 30000, style: { margin: '0 16px 16px 0' } }} />
+      <Toaster position="top-right" toastOptions={{ /*duration: 30000,*/ style: { margin: '0 16px 16px 0' } }} />
       <div className="container">
         <div className="header-container">
           <p className="header gradient-text">My NFT Collection</p>
           <p className="sub-text">Each unique. Each beautiful. Discover your NFT today.</p>
-          {currentAccount === '' ? renderNotConnectedContainer() : renderMintUI()}
+          {currentAccount === '' || !chainSupported ? renderNotConnectedContainer() : renderMintUI()}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
