@@ -17,6 +17,7 @@ const App = () => {
   const [maxMint, setMaxMint] = useState(0);
   const [mintCount, setMintCount] = useState(0);
   const [chainSupported, setChainSupported] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
 
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window;
@@ -142,6 +143,7 @@ const App = () => {
               </button>
             </div>
           ));
+          setIsMinting(false);
         });
 
         console.log('Setup event listener!');
@@ -164,6 +166,7 @@ const App = () => {
 
         console.log('Going to pop wallet now to pay gas...');
         let nftTxn = await connectedContract.makeAnEpicNFT();
+        setIsMinting(true);
 
         console.log('Mining...please wait.');
         await nftTxn.wait();
@@ -171,9 +174,11 @@ const App = () => {
         console.log(`Mined, see transaction: https://ropsten.etherscan.io/tx/${nftTxn.hash}`);
       } else {
         console.log("Ethereum object doesn't exist!");
+        setIsMinting(false);
       }
     } catch (error) {
       console.log(error);
+      setIsMinting(false);
     }
   };
 
@@ -210,6 +215,14 @@ const App = () => {
           <p className="header gradient-text">My NFT Collection</p>
           <p className="sub-text">Each unique. Each beautiful. Discover your NFT today.</p>
           {currentAccount === '' || !chainSupported ? renderNotConnectedContainer() : renderMintUI()}
+          {isMinting ? (
+            <>
+              <img src="https://i.giphy.com/media/3orifbi68gpoinx59m/giphy.webp" alt="monkeys mining" style={{ marginTop: '40px' }} />
+              <p className="sub-text">Mining in progress...</p>
+            </>
+          ) : (
+            ''
+          )}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
