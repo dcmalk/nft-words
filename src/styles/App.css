@@ -73,14 +73,31 @@
 
 .footer-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   padding-bottom: 30px;
+}
+
+.footer-item {
+  display: flex;
+  align-items: center;
 }
 
 .twitter-logo {
   width: 35px;
   height: 35px;
+}
+
+.opensea-logo {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+.rarible-logo {
+  width: 35px;
+  height: 35px;
+  margin-right: 2px;
 }
 
 .footer-text {

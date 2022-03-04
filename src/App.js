@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import toast, { Toaster } from 'react-hot-toast';
 import twitterLogo from './assets/twitter-logo.svg';
+import openseaLogo from './assets/opensea-logo.svg';
+import raribleLogo from './assets/rarible-logo.svg';
 import './styles/App.css';
 
 import myEpicNft from './utils/MyEpicNFT.json';
@@ -10,7 +12,8 @@ import myEpicNft from './utils/MyEpicNFT.json';
 const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDR;
 const TWITTER_HANDLE = 'dcmalk';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
-const OPENSEA_LINK = '';
+//const OPENSEA_LIBK = 'https://testnets.opensea.io/collection/squarenft-vu901lkj40'
+const RARIBLE_LINK = 'https://ropsten.rarible.com/collection/0x6D5e5287842dF13dAE312543F1A1673114293f59/items';
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState('');
@@ -225,8 +228,18 @@ const App = () => {
           )}
         </div>
         <div className="footer-container">
-          <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
-          <a className="footer-text" href={TWITTER_LINK} target="_blank" rel="noreferrer">{`more like this @${TWITTER_HANDLE}`}</a>
+          <div className="footer-item">
+            <img alt="Rarible Logo" className="rarible-logo" src={raribleLogo} />
+            <a className="footer-text" href={RARIBLE_LINK} target="_blank" rel="noreferrer">
+              View Collection on Rarible
+            </a>
+          </div>
+          <div className="footer-item">
+            <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
+            <a className="footer-text" href={TWITTER_LINK} target="_blank" rel="noreferrer">
+              {`More like this @${TWITTER_HANDLE}`}
+            </a>
+          </div>
         </div>
       </div>
     </div>
